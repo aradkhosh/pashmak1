@@ -24,55 +24,64 @@ class StudentInsert(Database):
         (%s,%s,%s,%s,%s)"""
         self.cr.execute(query, data)
         self.db.commit()
+        self.cr.close()
+        self.db.close()
 
-        self.cr = self.cr.close()
-        self.db = self.db.close()
 
-
-class StudentDelet(Database):
+class StudentDelete(Database):
     def __init_(self,nationalCODE):
         data = (nationalCODE,)  
         query = "DELETE FROM student WHERE id=%s"
         self.cr.execute(query, data)
         self.db.commit()
+        self.cr.close()
+        self.db.close()
 
-        self.cr = self.cr.close()
-        self.db = self.db.close()
 
 class StudentUpdate(Database):
-    def __init__(self, colNAME, colValue, id):
+    def __init__(self, name, family,birth,n_id, addr,id):
         Database.__init__(self)
-        data =  ()
-        query = "UPDATE student SET" +colNAME +"=%s WHERE id=%s"
+        data =  (name, family, birth,n_id, addr,id)
+        query = "UPDATE student SET name=%s, family=%s, birthDATE=%s, nationalCODE=%s, adress=%s WHERE id=%s"
         self.cr.execute(query, data)
         self.db.commit()
-        self.cr = self.cr.close()
-        self.db = self.db.close()
-        
+        self.cr.close()
+        self.db.close()
+
+
 class StudentSelect(Database):
     def __init__(self):
         Database.__init__(self)
         query = "select * from student"
         self.cr.execute(query)
         self.result = self.cr.fetchall()
-
         self.cr.close()
         self.db.close()
+    def get(self):
+        return self.result
+
+class StudentGet(Database):
+    def __init__(self, id):
+        Database.__init__(self)
+        query = "SELECT * FROM student WHERE id=%s" % id
+        self.cr.execute(query)
+        self.result = self.cr.fetchall()
+        self.cr.close()
+        self.db.close() 
 
     def get(self):
         return self.result
 
- class StudentSearch(Database):
-    def __init__(self, strValue):
+class StudentSearch(Database):
+    def __init__(self, name, family):
         Database.__init__(self)
-        strValue = '%' + strValue +'%'
-        data =(strValue, strValue)
-        query = """Select * FROM student
-        WHERE name LIKE %s OR family LIKE %s"""
-
+        name = '%' + name +'%'
+        family = '%' + family +'%'
+        data = (name, family)
+        query = """SELECT * FROM student
+        WHERE name LIKE %s AND family LIKE %s"""
         self.cr.execute(query, data)
         self.result = self.cr.fetchall()
-
         self.cr.close()
         self.db.close()
 
@@ -80,19 +89,19 @@ class StudentSelect(Database):
         return self.result
 
 
-# class GradeInsert(Database):
-#     def __init__(self,studentId,math,shimi,fizic,tarikh, programming):
-#         Database.__init__(self)
-#         data = (studentId,math,shimi,fizic,tarikh, programming)
-#         query = """INSERT INTO grade
-#         (studentId,math,shimi,fizic,tarikh, programming)
-#         VALUES
-#         (%s,%s,%s,%s,%s,%s)"""
-#         self.cr.execute(query, data)
-#         self.db.commit()
+class GradeInsert(Database):
+    def __init__(self,studentId,math,shimi,fizic,tarikh, programming):
+        Database.__init__(self)
+        data = (studentId,math,shimi,fizic,tarikh, programming)
+        query = """INSERT INTO grade
+        (studentId,math,shimi,fizic,tarikh, programming)
+        VALUES
+        %s,%s,%s,%s,%s,%s)"""
+        self.cr.execute(query, data)
+        self.db.commit()
 
-#         self.cr = self.cr.close
-#         self.db = self.db.close
+        self.cr.close()
+        self.db.close()
 
 # class   GradeSearch(Database):
 #     def __init__(self, studentId):
@@ -122,8 +131,8 @@ class StudentSelect(Database):
 #         self.cr.execute(query, data)
 #         self.db.commit()
 
-#         self.cr = self.cr.close
-#         self.db = self.db.close
+#       self.cr.close
+#       self.db.close
 
 # class GradeSearch(Database):
 #     def __init__(self, studentId):
